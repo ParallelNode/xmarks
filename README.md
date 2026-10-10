@@ -4,6 +4,7 @@
 
 **X marks the spot.** A command-line solver for first and second degree equations in `x`.
 
+![Version](https://img.shields.io/badge/version-1.1.0-purple)
 ![Python](https://img.shields.io/badge/python-3.8%2B-blue?logo=python&logoColor=white)
 ![Dependencies](https://img.shields.io/badge/dependencies-none-brightgreen)
 ![Degree](https://img.shields.io/badge/solves-1st%20%26%202nd%20degree-orange)
