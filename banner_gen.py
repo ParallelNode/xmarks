@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 """
-img2braille2.py - arte braille nitida.
+img2braille2.py - sharp braille art.
 
-Novita' rispetto alla v1:
-  - CLAHE (contrasto locale): le zone scure non collassano piu' in macchie piene
-  - unsharp mask: bordi definiti prima del dithering
-  - --mode combo: contorni forzati sopra il chiaroscuro -> "netto"
-  - --dither bayer: rumore regolare, molto piu' pulito di Floyd-Steinberg
-  - --color: braille a 24 bit in Windows Terminal (il salto di qualita' piu' grosso)
-  - --bg dark|light: polarita' corretta per il tuo terminale
+What's new in v2:
+  - CLAHE (local contrast): dark areas no longer collapse into solid blocks
+  - unsharp mask: defined edges before dithering
+  - --mode combo: forced outlines over shading -> "sharp"
+  - --dither bayer: regular noise, much cleaner than Floyd-Steinberg
+  - --color: 24-bit braille in Windows Terminal (the biggest leap in quality)
+  - --bg dark|light: correct polarity for your terminal
 
-Uso tipico:
-    python img2braille2.py foto.jpg -w 150 --mode combo --color
-    python img2braille2.py foto.jpg -w 180 --dither bayer --clahe 3.0
+Typical usage:
+    python img2braille2.py photo.jpg -w 150 --mode combo --color
+    python img2braille2.py photo.jpg -w 180 --dither bayer --clahe 3.0
 
-Dipendenze: pillow, numpy
+Dependencies: pillow, numpy
 """
 
 import argparse
