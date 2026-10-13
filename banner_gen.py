@@ -19,7 +19,6 @@ Dependencies: pillow, numpy
 
 import argparse
 import sys
-
 import numpy as np
 from PIL import Image, ImageFilter, ImageOps
 
@@ -39,11 +38,9 @@ BAYER8 = np.array([
     [63, 31, 55, 23, 61, 29, 53, 21],
 ], dtype=np.float32)
 
-
 # --------------------------------------------------------------------------
-# preparazione
+# prep
 # --------------------------------------------------------------------------
-
 def load_rgb(path):
     img = Image.open(path)
     if img.mode in ("RGBA", "LA", "P"):
@@ -52,21 +49,16 @@ def load_rgb(path):
         img = Image.alpha_composite(bg, img)
     return img.convert("RGB")
 
-
 def target_size(size, char_width, font_aspect):
-    """Cella braille = 2x4 punti; cella di testo alta font_aspect volte la
-    larghezza. I punti risultano quadrati solo se compensi."""
     w, h = size
     px_w = char_width * 2
     px_h = px_w * (h / w) * (4.0 / (2.0 * font_aspect))
     px_h = max(4, int(round(px_h / 4)) * 4)
     return px_w, px_h
-
-
+  
 # --------------------------------------------------------------------------
-# contrasto locale
+# local contrast
 # --------------------------------------------------------------------------
-
 def clahe(a, clip=2.0, tiles=8):
     """Contrast Limited Adaptive Histogram Equalization, solo numpy.
     a: array uint8. Ritorna uint8."""
@@ -90,7 +82,7 @@ def clahe(a, clip=2.0, tiles=8):
             cdf = (cdf - cdf[0]) / max(cdf[-1] - cdf[0], 1e-6) * 255.0
             maps[i, j] = cdf
 
-    # interpolazione bilineare fra i centri dei tile
+    # bilinear interpolation beetween the centers of the tiles
     yy = np.arange(h, dtype=np.float32) / th - 0.5
     xx = np.arange(w, dtype=np.float32) / tw - 0.5
     i0 = np.clip(np.floor(yy).astype(int), 0, ty - 1)
@@ -110,7 +102,6 @@ def clahe(a, clip=2.0, tiles=8):
            look(i1, j1) * wy * wx)
     return np.clip(out, 0, 255).astype(np.uint8)
 
-
 def sobel_mag(a):
     a = a.astype(np.float32)
     kx = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]], dtype=np.float32)
@@ -122,30 +113,24 @@ def sobel_mag(a):
     m = np.hypot(gx, gy)
     return m / m.max() * 255.0 if m.max() > 0 else m
 
-
 # --------------------------------------------------------------------------
 # dithering
 # --------------------------------------------------------------------------
-
 def dither_bayer(a):
     h, w = a.shape
     t = np.tile(BAYER8, (-(-h // 8), -(-w // 8)))[:h, :w]
     t = (t + 0.5) / 64.0 * 255.0
     return a.astype(np.float32) > t
 
-
 def dither_fs(a):
     return np.asarray(Image.fromarray(a, mode="L").convert("1"), dtype=bool)
-
 
 def dither_none(a, threshold):
     return a >= threshold
 
-
 # --------------------------------------------------------------------------
 # output
 # --------------------------------------------------------------------------
-
 def render(on, rgb=None):
     """on: bool array dei punti accesi. rgb: array HxWx3 per il colore."""
     h, w = on.shape
@@ -172,7 +157,6 @@ def render(on, rgb=None):
             line += "\x1b[0m"
         lines.append(line)
     return lines
-
 
 def main():
     ap = argparse.ArgumentParser()
@@ -246,7 +230,6 @@ def main():
     else:
         sys.stdout.reconfigure(encoding="utf-8")
         print(text)
-
 
 if __name__ == "__main__":
     main()
