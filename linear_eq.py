@@ -196,7 +196,7 @@ def clean_up(p):
     return {
         deg: coeff
         for deg, coeff in p.items()
-        if abs(coeff) > EPS  # Delete really-close-to-zero coeffs
+        if abs(coeff) > EPS    # Delete really-close-to-zero coeffs
     }
 
 def add(a, b):
